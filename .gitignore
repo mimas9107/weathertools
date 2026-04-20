@@ -8,8 +8,11 @@ dist/
 .eggs/
 *.so
 .Python
+
+# Environment
 .env
 .env.local
+.env.*.local
 
 # Virtual environments
 .venv/
@@ -35,7 +38,10 @@ htmlcov/
 # Logs
 *.log
 
+# Cache
+.ruff_cache/
+.opencode/
+
 # Project specific
 screenshots/
 data/
-uv.lock
