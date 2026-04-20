@@ -80,7 +80,7 @@ weathertools/
 - 天氣代碼翻譯
 
 ### weather_vision.py
-- 從 viewpoints API 取得監視器列表
+- 從 viewpoints API 取得監視器列表, 參考專案: [https://github.com/mimas9107/viewpoints](https://github.com/mimas9107/viewpoints)
 - 支援 JWT 登入認證
 - 使用 Ollama Vision Model 分析天氣
 - 顯示天氣、能見度、光線、天空狀態
@@ -91,7 +91,3 @@ weathertools/
 - [Ollama](https://ollama.com/) (本機執行用於圖片分析)
 - 中央氣象署 API Key
 - Viewpoints 帳號密碼
-
-## 📄 License
-
-MIT
