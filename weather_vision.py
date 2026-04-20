@@ -16,13 +16,50 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Optional, List, Any
 from playwright.async_api import async_playwright, Playwright, Browser
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- 常數設定 ---
 
-CONFIG_API_URL = "https://viewpoints.onrender.com/api/config"
+CONFIG_API_URL = os.environ.get("VIEWPOINTS_API_URL", "https://viewpoints-4dzi.onrender.com")
 DEFAULT_SCREENSHOT_DIR = Path("screenshots")
 DEFAULT_OLLAMA_MODEL = "llava:latest"
 CAMERA_MAPPING: Dict[str, Dict[str, Any]] = {}
+
+# --- 認證與 Token 管理 ---
+_auth_token: Optional[str] = None
+
+
+def login_and_get_token() -> Optional[str]:
+    """使用帳號密碼登入並取得 JWT Token"""
+    global _auth_token
+    username = os.environ.get("VIEWPOINTS_USERNAME")
+    password = os.environ.get("VIEWPOINTS_PASSWORD")
+
+    if not username or not password:
+        print("⚠️ 請設定 VIEWPOINTS_USERNAME 和 VIEWPOINTS_PASSWORD 環境變數。")
+        return None
+
+    try:
+        print(f"🔄 正在登入至 {CONFIG_API_URL}...")
+        response = requests.post(
+            f"{CONFIG_API_URL}/api/auth/login",
+            data={"username": username, "password": password},
+            timeout=10
+        )
+        response.raise_for_status()
+        token_data = response.json()
+        _auth_token = token_data.get("access_token")
+        if _auth_token:
+            print("✅ 登入成功，已取得 Token。")
+            return _auth_token
+        else:
+            print(f"❌ 登入失敗: {token_data.get('detail', '未知錯誤')}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"❌ 登入請求失敗: {e}")
+        return None
 
 VISION_PROMPT = """
 你是一個專業的台灣天氣觀測員，你的任務是分析風景監視器的即時畫面。
@@ -44,8 +81,11 @@ def get_camera_config() -> bool:
     global CAMERA_MAPPING
     CAMERA_MAPPING.clear()
     try:
-        print(f"🔄 正在從 {CONFIG_API_URL} 獲取最新的監視器列表...")
-        response = requests.get(CONFIG_API_URL, timeout=15)
+        print(f"🔄 正在從 {CONFIG_API_URL}/api/config 獲取最新的監視器列表...")
+        headers = {}
+        if _auth_token:
+            headers["Authorization"] = f"Bearer {_auth_token}"
+        response = requests.get(f"{CONFIG_API_URL}/api/config", headers=headers, timeout=15)
         response.raise_for_status()
         config_data = response.json()
         
@@ -101,33 +141,35 @@ async def _screenshot_video_with_playwright(browser: Browser, page_url: str, out
     context = None
     try:
         context = await browser.new_context(
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            # 降低圖片品質以加速處理
-            jpeg_quality=80
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         )
         page = await context.new_page()
         print(f"   ... (Playwright) 正在導航至: {page_url}")
         
-        # 放寬等待條件，'domcontentloaded' 更適合動態內容頁面
         await page.goto(page_url, timeout=45000, wait_until="domcontentloaded")
 
-        # 頁面上的主要播放器容器
-        video_selector = ".player-container"
+        video_selectors = [".player-container", "video", "iframe", "body > div"]
+        video_element = None
         
-        print("   ... (Playwright) 等待播放器元素加載...")
-        # 給予更長的時間等待元素出現
-        video_element = await page.wait_for_selector(video_selector, timeout=30000)
+        for sel in video_selectors:
+            try:
+                print(f"   ... (Playwright) 嘗試選擇器: {sel}")
+                video_element = await page.wait_for_selector(sel, timeout=5000)
+                if video_element:
+                    break
+            except Exception:
+                continue
 
         if not video_element:
-            print(f"   ❌ 在頁面 {page_url} 上找不到指定的播放器元素。")
-            return False
+            print(f"   ⚠️ 找不到特定播放器元素，將截取整個頁面。")
 
-        # 延長等待時間，確保影片有足夠時間開始播放並渲染第一幀
-        print("   ... (Playwright) 等待影片渲染...")
-        await asyncio.sleep(8)
+        print("   ... (Playwright) 等待畫面渲染...")
+        await asyncio.sleep(5)
 
-        print("   ... (Playwright) 正在擷取播放器畫面...")
-        await video_element.screenshot(path=str(output_path))
+        if video_element:
+            await video_element.screenshot(path=str(output_path))
+        else:
+            await page.screenshot(path=str(output_path), full_page=True)
         
         print(f"   ✅ (Playwright 截圖) 已儲存至: {output_path}")
         return True
@@ -281,6 +323,10 @@ def summarize_and_print_results(results: List[Dict[str, Any]]) -> None:
 async def main_async():
     """非同步主程式，管理 Playwright 瀏覽器實例。"""
     print("=" * 60); print("🏞️  天氣視覺分析工具 (Ollama)"); print("=" * 60)
+
+    # 執行登入以取得 Token
+    if not login_and_get_token():
+        print("\n⚠️ 登入失敗，將嘗試以匿名身份存取 API...")
 
     if not get_camera_config() or not check_ollama_connection():
         print("\n無法繼續執行，請檢查錯誤訊息。 সন"); return
