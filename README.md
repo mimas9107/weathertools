@@ -1,3 +1,13 @@
+---
+name:              "README.md"
+description:       "專案說明文件 — 天氣工具"
+created_date:      "2025/02/04"
+modified_date:     "2026/06/09"
+project_version:   "0.3.0"
+document_version:  "1.0.0"
+agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
+---
+
 # 🌤️ 天氣工具 (Weather Tools)
 
 中央氣象署天氣資料抓取工具與監視器畫面天氣分析工具。

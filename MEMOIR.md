@@ -1,8 +1,18 @@
+---
+name:              "MEMOIR.md"
+description:       "專案情境與狀態管理"
+created_date:      "2025/02/04"
+modified_date:     "2026/06/09"
+project_version:   "0.3.0"
+document_version:  "1.0.0"
+agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
+---
+
 # 🌿 MEMOIR: 專案情境與狀態管理 🌿
 
 ## 🌍 專案概覽
 - **名稱**: weathertools
-- **版本**: 0.2.0
+- **版本**: 0.3.0
 - **描述**: 中央氣象署天氣資料抓取工具與監視器畫面天氣分析工具
 - **環境**: Python (透過 .py 檔案和 pyproject.toml 偵測)
 - **狀態**: 已初始化 ✅
@@ -30,6 +40,11 @@
 - **狀態**: 已完成 ✅ (2025-04-20 驗證通過)
 - **說明**: 更新 `README.md` 和 `MEMOIR.md`，使用繁體中文
 - **驗證**: 檔案存在且語法正確
+
+### [x] [PY] 新增 GPS 測站定位工具
+- **狀態**: 已完成 ✅ (2026-06-09 行為驗證通過)
+- **說明**: 新增 `weather_gps.py`，支援多種 GPS 格式自動判別、測站距離計算、3km 閾值邏輯、多站平均與半四分位距顯示
+- **驗證**: DD/DMS/DDM/tuple 輸入正確解析，單站/3站平均模式正常運作，風向向量平均正確
 
 ## 📝 待辦任務格式範例
 ```

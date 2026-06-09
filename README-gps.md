@@ -1,3 +1,13 @@
+---
+name:              "README-gps.md"
+description:       "GPS 測站定位工具說明文件"
+created_date:      "2026/06/09"
+modified_date:     "2026/06/09"
+project_version:   "0.3.0"
+document_version:  "1.0.0"
+agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
+---
+
 # 🛰️ GPS 測站定位工具 — `weather_gps.py`
 
 給定 GPS 座標，自動判別格式後，從中央氣象署 API (O-A0001-001) 找出最近 2~3 個測站的即時觀測資料並平均回傳。若目標點位 3km 內有測站，則直接以該站為準。
