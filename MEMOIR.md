@@ -3,7 +3,7 @@ name:              "MEMOIR.md"
 description:       "專案情境與狀態管理"
 created_date:      "2025/02/04"
 modified_date:     "2026/06/09"
-project_version:   "0.3.0"
+project_version:   "0.3.1"
 document_version:  "1.0.0"
 agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
 ---
@@ -12,7 +12,7 @@ agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
 
 ## 🌍 專案概覽
 - **名稱**: weathertools
-- **版本**: 0.3.0
+- **版本**: 0.3.1
 - **描述**: 中央氣象署天氣資料抓取工具與監視器畫面天氣分析工具
 - **環境**: Python (透過 .py 檔案和 pyproject.toml 偵測)
 - **狀態**: 已初始化 ✅

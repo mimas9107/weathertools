@@ -3,7 +3,7 @@ name:              "README.md"
 description:       "專案說明文件 — 天氣工具"
 created_date:      "2025/02/04"
 modified_date:     "2026/06/09"
-project_version:   "0.3.0"
+project_version:   "0.3.1"
 document_version:  "1.0.0"
 agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
 ---
@@ -70,14 +70,20 @@ uv run weather_vision.py
 - `2`: 分析所有監視器畫面
 - `q`: 離開
 
+### TDX 監視器 GPS 查詢
+
+見 [`README-tdx.md`](README-tdx.md)。
+
 ## 📁 目錄結構
 
 ```
 weathertools/
 ├── weather.py          # 中央氣象署天氣資料抓取
 ├── weather_vision.py  # 監視器畫面天氣分析 (Ollama Vision)
-├── weather_gps.py     # GPS 測站定位工具（本文件）
+├── weather_gps.py     # GPS 測站定位工具
+├── weather_tdx.py     # TDX 監視器 GPS 查詢 + 天氣整合
 ├── README-gps.md      # GPS 工具說明文件
+├── README-tdx.md      # TDX 工具說明文件
 ├── pyproject.toml      # 專案設定
 ├── .env               # 環境變數 (請勿提交至 Git)
 ├── .env.example       # 環境變數範本
@@ -112,6 +118,11 @@ weathertools/
 - 找出最近 2~3 個測站的即時觀測資料並平均
 - 目標 3km 內有測站時直接以該站為準（不強制湊數）
 - 風向採用向量平均，避免角度繞圈錯誤
+- 支援 TDX 交通監視器 GPS 整合（見 `weather_tdx.py`）
+
+### weather_tdx.py
+
+見 [`README-tdx.md`](README-tdx.md)。
 
 ## 📋 需求
 

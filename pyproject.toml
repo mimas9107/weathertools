@@ -1,6 +1,6 @@
 [project]
 name = "weathertools"
-version = "0.3.0"
+version = "0.3.1"
 description = "中央氣象署天氣資料與監視器視覺分析工具"
 readme = "README.md"
 requires-python = ">=3.11"

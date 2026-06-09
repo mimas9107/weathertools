@@ -3,7 +3,7 @@ name:              "README-gps.md"
 description:       "GPS 測站定位工具說明文件"
 created_date:      "2026/06/09"
 modified_date:     "2026/06/09"
-project_version:   "0.3.0"
+project_version:   "0.3.1"
 document_version:  "1.0.0"
 agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
 ---

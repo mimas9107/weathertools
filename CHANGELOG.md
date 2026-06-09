@@ -3,7 +3,7 @@ name:              "CHANGELOG.md"
 description:       "專案版本變更記錄"
 created_date:      "2025/02/04"
 modified_date:     "2026/06/09"
-project_version:   "0.3.0"
+project_version:   "0.3.1"
 document_version:  "1.0.0"
 agent_sign:        ['human/justin', 'opencode/deepseek-v4-flash-free']
 ---
@@ -14,6 +14,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.3.1] - 2026-06-09
+
+### Changed
+- `query_cctv_by_id()` 改用精準端點 `City/{city}/{id}` 直接查詢，取代全縣市掃描
 
 ## [0.3.0] - 2026-06-09
 
